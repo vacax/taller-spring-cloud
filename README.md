@@ -9,7 +9,7 @@ Spring Boot y Netflix OSS. El taller requiere conocimientos de la plataforma Jav
  
  ## Marco Conceptual - MicroServicios
  
- Ver la presentación -> [Ir a Presentación]()
+ Ver la presentación -> [Ir a Presentación](https://docs.google.com/presentation/d/1K7NClwUr06h8wh7SErEBe7laRHzv1g31lr8PwGtEGiU/edit?usp=sharing)
  
  ## Servicios Implementados
 

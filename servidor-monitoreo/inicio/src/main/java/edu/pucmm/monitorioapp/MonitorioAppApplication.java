@@ -6,7 +6,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.cloud.netflix.turbine.EnableTurbine;
 
-
+/**
+ * Para acceder ir a http://localhost:4444/hystrix
+ */
 @EnableDiscoveryClient
 @EnableHystrixDashboard
 @EnableTurbine

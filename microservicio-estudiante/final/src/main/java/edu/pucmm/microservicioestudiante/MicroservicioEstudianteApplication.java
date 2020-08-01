@@ -1,6 +1,7 @@
 package edu.pucmm.microservicioestudiante;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixException;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -8,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
@@ -19,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
+import org.h2.tools.Server;
+import java.sql.SQLException;
 
 @EnableDiscoveryClient
 @EnableCircuitBreaker
@@ -29,6 +33,16 @@ public class MicroservicioEstudianteApplication {
         SpringApplication.run(MicroservicioEstudianteApplication.class, args);
     }
 
+    /**
+     * Para subir H2 modo servidor en Spring Boot.
+     * @return
+     * @throws SQLException
+     */
+    /*@Bean(initMethod = "start", destroyMethod = "stop")
+    public Server inMemoryH2DatabaseaServer() throws SQLException {
+        System.out.println("Iniciando Base de datos.");
+        return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092", "-ifNotExists", "-tcpDaemon");
+    }*/
 }
 
 /**
@@ -99,20 +113,20 @@ class AppController{
      * @return
      * @throws InterruptedException
      */
-    @HystrixCommand(fallbackMethod = "salidaCircuitoAbierto", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
-    })
+    @HystrixCommand(fallbackMethod = "salidaCircuitoAbierto")
     @RequestMapping("/simular-parada")
-    public String simularParada() throws InterruptedException {
+    public String simularParada()  {
         Random random = new Random();
         int valorGenerado = random.nextInt(3000);
         System.out.println("El valor generado: "+valorGenerado);
-        Thread.sleep(valorGenerado);
-        return "Dato que no debe presentarse...";
+        if(valorGenerado > 1000){
+            throw new RuntimeException("Error provocado...");
+        }
+        return "Mostrando información";
     }
 
     public String salidaCircuitoAbierto(){
-        return "Problema con el tiempo de ejecucion...";
+        return "Con la ejecución del metodo.... Abriendo el circuito...";
     }
 
 }
