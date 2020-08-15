@@ -22,6 +22,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     //librería necesaria para utilizar el servidor para centralizar la configuracion
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    //librería log ELK
+    implementation 'net.logstash.logback:logstash-logback-encoder:6.4'
+
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }

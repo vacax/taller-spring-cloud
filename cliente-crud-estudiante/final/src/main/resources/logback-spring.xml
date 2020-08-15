@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Adaptado de
+ https://github.com/abdulwaheed18/spring-boot-tutorial/blob/elkstack/spring-logger/src/main/resources/logback-spring.xml -->
+<!-- scan="true" scanPeriod="15 seconds" will enable auto scan of this file
+	after every 15 seconds and if there is any change in file then it will reflect
+	it -->
+<configuration scan="true" scanPeriod="15 seconds">
+
+    <!-- Logback configuration files support variables,Log file to be created
+        at -->
+    <property name="LOGS" value="./logs" />
+
+    <!-- Console appender will print the log on console -->
+    <appender name="Console"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!-- We can set the pattern and highlight whatever required -->
+            <Pattern>
+                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)]
+                %yellow(%C{1.}): %msg%n%throwable
+            </Pattern>
+        </layout>
+    </appender>
+
+    <!-- Log to be logged in log file, FileAppender appends messages to a file -->
+    <appender name="RollingFile"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/spring-logger.log</file>
+        <encoder
+                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+        </encoder>
+
+        <!-- Rolling Policy which will move old log file (cross 10 MB) to archive -->
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 10 MegaBytes -->
+            <fileNamePattern>${LOGS}/archived/spring-logger-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- keep 1 day' worth of history capped at 10MB total size -->
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="elk" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>localhost:5044</destination>
+        <!-- encoder is required -->
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
+    <!-- LOG everything at INFO level -->
+    <root level="info">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+        <appender-ref ref="elk" />
+    </root>
+
+</configuration>

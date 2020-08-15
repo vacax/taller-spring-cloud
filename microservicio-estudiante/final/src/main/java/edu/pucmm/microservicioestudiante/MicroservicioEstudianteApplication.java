@@ -3,6 +3,10 @@ package edu.pucmm.microservicioestudiante;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixException;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.helpers.BasicMarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -103,8 +107,11 @@ interface EstudianteRepository extends JpaRepository<Estudiante, Integer>{
 @RequestMapping("/")
 class AppController{
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AppController.class);
+
     @RequestMapping("/")
     public String app(HttpServletRequest request){
+        LOGGER.info("Consultado la barra");
         return "Micro Servicio Estudiante por el puerto:"+request.getLocalPort();
     }
 
@@ -116,9 +123,10 @@ class AppController{
     @HystrixCommand(fallbackMethod = "salidaCircuitoAbierto")
     @RequestMapping("/simular-parada")
     public String simularParada()  {
+        LOGGER.info("Prueba simulación de parada.");
         Random random = new Random();
         int valorGenerado = random.nextInt(3000);
-        System.out.println("El valor generado: "+valorGenerado);
+        LOGGER.info("El valor generado: "+valorGenerado);
         if(valorGenerado > 1000){
             throw new RuntimeException("Error provocado...");
         }
@@ -126,6 +134,7 @@ class AppController{
     }
 
     public String salidaCircuitoAbierto(){
+        LOGGER.info("Circuito Abierto...");
         return "Con la ejecución del metodo.... Abriendo el circuito...";
     }
 
@@ -134,6 +143,8 @@ class AppController{
 @RestController
 @RequestMapping("/estudiante/")
 class EstudianteController{
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EstudianteController.class);
 
     @Autowired
     EstudianteRepository estudianteRepository;
@@ -144,13 +155,17 @@ class EstudianteController{
      */
     @GetMapping("/")
     public List<Estudiante> getListaEstudiante(){
-        return estudianteRepository.findAll();
+        Marker marker = new BasicMarkerFactory().getMarker("cantidad_estudiante");
+        List<Estudiante> all = estudianteRepository.findAll();
+        LOGGER.info(marker, ""+all.size());
+        return all;
     }
 
     @PostMapping(value = "/")
     public Estudiante crearEstudiante(@RequestBody Estudiante estudiante){
-        System.out.println("recibido el objeto: "+estudiante);
+        LOGGER.info("Recibido el objeto: "+estudiante);
         estudianteRepository.save(estudiante);
+        LOGGER.info("Guardando Estudiante: "+estudiante);
         return estudiante;
     }
 
