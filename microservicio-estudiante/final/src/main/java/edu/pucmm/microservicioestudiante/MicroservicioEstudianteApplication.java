@@ -120,7 +120,7 @@ class AppController{
      * @return
      * @throws InterruptedException
      */
-    @HystrixCommand(fallbackMethod = "salidaCircuitoAbierto")
+    @HystrixCommand(fallbackMethod = "salidaCircuitoAbierto" )
     @RequestMapping("/simular-parada")
     public String simularParada()  {
         LOGGER.info("Prueba simulación de parada.");

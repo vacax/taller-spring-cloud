@@ -1,0 +1,139 @@
+version: '3.9'
+
+networks:
+  mi-red:
+
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.1
+    restart: always
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - mi-red
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.8.1
+    restart: always
+    ports:
+      - 5044:5044
+    volumes:
+      - "./archivos-configuracion/logstash/:/usr/share/logstash/pipeline/"
+    networks:
+      - mi-red
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.8.1
+    restart: always
+    ports:
+      - 5601:5601
+    networks:
+      - mi-red
+    depends_on:
+      - elasticsearch
+      - logstash
+      - microservicio-estudiante
+
+  config-server:
+    build: ./servidor-configuracion/final
+    restart: always
+    environment:
+      - EUREKA-SERVER=eureka-server
+      - spring_profiles_active=nube
+      - LOGSTASH-SERVER=localhost
+    ports:
+      - 8888:8888
+    networks:
+      - mi-red
+    depends_on:
+      - logstash
+
+  eureka-server:
+    build: ./servidor-eureka/final
+    restart: always
+    environment:
+      - CONFIG-SERVER=config-server
+      - LOGSTASH-SERVER=logstash
+    ports:
+      - 8761:8761
+    networks:
+      - mi-red
+    depends_on:
+      - config-server
+
+  zulu-server:
+    build: ./servidor-perimetral/final
+    restart: always
+    environment:
+      - CONFIG-SERVER=config-server
+      - EUREKA-SERVER=eureka-server
+      - LOGSTASH-SERVER=logstash
+    ports:
+      - 8080:8080
+    networks:
+      mi-red:
+    depends_on:
+      - eureka-server
+
+  hystrix-server:
+    build: ./servidor-monitoreo/inicio
+    restart: always
+    environment:
+      - CONFIG-SERVER=config-server
+      - EUREKA-SERVER=eureka-server
+      - LOGSTASH-SERVER=logstash
+    ports:
+      - 4444:4444
+    networks:
+      - mi-red
+    depends_on:
+      - microservicio-estudiante
+
+  base-datos-estudiante:
+    image: buildo/h2database:2020-12-11
+    restart: always
+    ports:
+      - 8082:8082
+    networks:
+      - mi-red
+
+  microservicio-estudiante:
+    build: ./microservicio-estudiante/final
+    restart: always
+    environment:
+      - CONFIG-SERVER=config-server
+      - HOST-BD=base-datos-estudiante
+      - EUREKA-SERVER=eureka-server
+      - LOGSTASH-SERVER=logstash
+    networks:
+      - mi-red
+    depends_on:
+      - base-datos-estudiante
+
+  client-web:
+    build: ./cliente-crud-estudiante/final
+    restart: always
+    environment:
+      - CONFIG-SERVER=config-server
+      - EUREKA-SERVER=eureka-server
+      - LOGSTASH-SERVER=logstash
+    ports:
+      - 8181:8181
+    networks:
+      - mi-red
+    depends_on:
+      - zulu-server
+      - microservicio-estudiante
+
+
+
+
+
+
+

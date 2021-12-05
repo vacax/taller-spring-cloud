@@ -15,6 +15,7 @@ Spring Boot y Netflix OSS. El taller requiere conocimientos de la plataforma Jav
 
 Estaremos configurando los siguientes servicios:
 
+* ELK Stack.
 * Servidor de Configuración.
 * Servidor de AutoDescubrimiento.
 * Servidor Perimetral.
@@ -33,7 +34,13 @@ Puede utiliza el IDE de su preferencia, todos los proyectos utilizan Gradle.
 
 ## Implementación de los Servicios
 
-### Inicio Servicios ELK ()
+### Inicio Servicios ELK (Elasticsearch, Logstash y Kibana)
+
+ELK,son un conjunto de servicios que nos permiten centralizar los logs de nuestras aplicaciones.
+
+* Elasticsearch: Servicio de indexación.
+* Logstash: Servicio para extraer los logs, transformar y enviar al servidor Elasticsearch.
+* Kibana: Servicio para visualizar los logs almacenados.
 
 Para arrancar el servicio para la centralización de los log. 
 
@@ -53,15 +60,21 @@ docker run --name kibana --network elk --rm -p 5601:5601 docker.elastic.co/kiban
 ```
 
 **Logstash**
+
+Moverse a la carpeta donde clonada:
 ```
-docker run --name logstash --network elk --rm -it -p 5044:5044 -v ~/pipeline/:/usr/share/logstash/pipeline/ docker.elastic.co/logstash/logstash:7.8.1
+cd taller-spring-cloud
+```
+Ejecutar el siguiente comando:
+```
+docker run --name logstash --network elk --rm -it -p 5044:5044 -v ./archivos-configuracion/logstash/:/usr/share/logstash/pipeline/ docker.elastic.co/logstash/logstash:7.8.1
 ```
 
 ### Servidor de Configuración
 
-Cuando tenemos una arquitectura de diseña que depende de varios
+Cuando tenemos una arquitectura que depende de varios
 procesos trabajando de forma coordinada, es importante contar con la funcionalidad
-de centralizar las configuraciones y permitir la actualización de esos parametros
+de centralizar las configuraciones y permitir la actualización de esos parámetros
 en caliente. Para nuestro ejemplo abrir el proyecto **servidor-configuracion** en la carpeta inicio.  
 Notar las dependencias que están agregadas en el archivo **build.gradle** :
      
@@ -90,7 +103,7 @@ public class ServidorConfigApplication {
 ```
 
 En el archivo de propiedad **application.properties** ubicando es necesario incluir 
-la siguiente informacion:
+la siguiente información:
 
 ```
 #Archivo configuración del Servidor de Configuración de Spring Cloud.
@@ -108,16 +121,16 @@ spring.profiles.active=native
 ```
 
 Notar que dependiendo la configuración, es necesario indicar la carpeta la configuración
-donde se estaran almacenando las configuraciones de los proyectos,
-podemos utilizar una uri remota,  referenciando a un repositorio en Git indicada en el 
+donde se estarán almacenando las configuraciones de los proyectos,
+podemos utilizar una uri remota, referenciando a un repositorio en Git indicada en el 
 archivo de propiedades. Para el taller estaremos utilizando un directorio local.
-Una vez indicado los parametros más arriba, procedemos a subir el servicio.
+Una vez indicado los parámetros más arriba, procedemos a subir el servicio.
 
 ### Servidor de AutoDescubrimiento basado en Eureka.
 
 TODO Argumento.
 
-Para implementar un servicio de autodescubrimiendo, estaremo utilizando la funcionalidad
+Para implementar un servicio de autodescubrimiendo, estaremos utilizando la funcionalidad
 disponible en la librería de Eureka. Para trabajar en el proyecto **servidor-eureka**, 
 ver la dependencia que estamos agregando en el proyecto en el archivo **build.gradle**
  
@@ -521,4 +534,12 @@ zuul.routes.estudiante.service-id=microservicio-estudiante
 ```
 
 Puede verificar en el siguiente está disponible en el siguiente enlace:
-[http://localhost:8080/microservicio-estudiante/](http://localhost:8080/microservicio-estudiante/)
+[http://localhost:8080/estudiante/](http://localhost:8080/estudiante/)
+
+### Servidor Monitoreo - Hystrix
+
+Servicio que nos permite visualizar en tiempo real, los ....
+
+### Arranque del proyecto vía Docker Compose
+
+El proyecto está configurado para ...
