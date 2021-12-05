@@ -1,6 +1,6 @@
-<!-- Adapntado de
- https://github.com/abdulwaheed18/spring-boot-tutorial/blob/elkstack/spring-logger/src/main/resources/logback-spring.xml -->
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Adaptado de
+ https://github.com/abdulwaheed18/spring-boot-tutorial/blob/elkstack/spring-logger/src/main/resources/logback-spring.xml -->
 <!-- scan="true" scanPeriod="15 seconds" will enable auto scan of this file
 	after every 15 seconds and if there is any change in file then it will reflect
 	it -->
