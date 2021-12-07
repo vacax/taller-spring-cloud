@@ -10,7 +10,11 @@ Spring Boot y Netflix OSS. El taller requiere conocimientos de la plataforma Jav
  ## Marco Conceptual - MicroServicios
  
  Ver la presentación -> [Ir a Presentación](https://docs.google.com/presentation/d/1K7NClwUr06h8wh7SErEBe7laRHzv1g31lr8PwGtEGiU/edit?usp=sharing)
- 
+
+ ## Estructura Implementada
+
+![estructura](./imagenes/esquema-app.png)
+
  ## Servicios Implementados
 
 Estaremos configurando los siguientes servicios:
@@ -211,7 +215,7 @@ Arracamos el servicio y en este punto podemos ir a las siguientes URL:
 [Ir al Dashboard de Eureka](http://localhost:8761)  
 Validar que la configuración está centralizada [http://localhost:8888/servidor-eureka/default](http://localhost:8888/servidor-eureka/default)
 
-### Micro Servicio de Prueba
+### Microservicio Estudiante (Aplicación de prueba)
 
 TODO Argumentar....
 
@@ -538,8 +542,97 @@ Puede verificar en el siguiente está disponible en el siguiente enlace:
 
 ### Servidor Monitoreo - Hystrix
 
-Servicio que nos permite visualizar en tiempo real, los ....
+Servicio Hystrix nos ayuda a controlar la interacción entre los servicios proporciando tolerancia a fallos
+y a latencia. Mejora la resistencia general del sistema al aislar los servicios que fallan y detener el efecto en cascada de las fallas.
+
+En la aplicación **Microservicios-Estudiante**, tenemos implementado un método para simular una llamada que puede fallar
+o su tiempo de respuesta sobrepase lo esperado. Ver el siguiente fragmento de código:
+
+```
+ /**
+     * Simulando una parada del metodo por tiempo...
+     * @return
+     * @throws InterruptedException
+     */
+    @HystrixCommand(fallbackMethod = "salidaCircuitoAbierto", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
+    })
+    @RequestMapping("/simular-parada")
+    public String simularParada() throws InterruptedException {
+        Random random = new Random();
+        int valorGenerado = random.nextInt(3000);
+        System.out.println("El valor generado: "+valorGenerado);
+        Thread.sleep(valorGenerado);
+        return "Dato que no debe presentarse...";
+    }
+```
+Notar la anotación **@HystrixCommand**, que incluye la configuración del método que estará utilizando en 
+caso de ocurrir un error en la llamada. El método que está llamando será **salidaCircuitoAbierto**, mostrando
+una simple llamada.
+
+```
+public String salidaCircuitoAbierto(){
+        return "Problema con el tiempo de ejecucion...";
+    }
+```
+
+El proyecto que implementa el monitor de los métodos que estamos controlando vía Hystrix, se llama **Servidor Monitore**,
+para el proyecto únicamente tenemos la versión lista para ejecutar. Los puntos importante a destacar son las dependencias
+y las anotaciones de configuración.
+
+**bootstrap.properties**
+
+```
+  //Actuator para brindar interfaz para visualizar metricas.
+  implementation 'org.springframework.boot:spring-boot-starter-actuator'
+  //Dashboard para monitorear los metodos
+  implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard'
+  //Libreríá del agregador Turbine, para manejar los flujos (streams) de Hystrix
+  implementation 'org.springframework.cloud:spring-cloud-starter-netflix-turbine'
+```
+
+**MonitorioAppApplication**
+
+Incluimos las anotaciones para notificar a Eureka, subir la aplicación Hystrix y Turbine.
+Estamos omitiendo las demás configuraciones vistas más arriba.
+
+```
+@EnableDiscoveryClient
+@EnableHystrixDashboard
+@EnableTurbine
+@SpringBootApplication
+public class MonitorioAppApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(MonitorioAppApplication.class, args);
+    }
+
+}
+```
+
+Una vez inicializado el proyecto, pueden acceder al dashboard de la aplicación en la 
+siguiente URL: [http://localhost:4444/hystrix](http://localhost:4444/hystrix), para ver el flujo
+el flujo que estará utilizando será: http://localhost:4444/turbine.stream?cluster=MICROSERVICIO-ESTUDIANTE
+
+![Dashboard-Hystrix](./imagenes/hystrix-dashboard.png)
 
 ### Arranque del proyecto vía Docker Compose
 
-El proyecto está configurado para ...
+El proyecto está configurado para iniciarlizar todo los diferentes sistemas de forma automática
+desde el script de *docker-compose*, para inicializarlo pueden ejecutar el siguiente comando:
+
+```
+docker-compose up --scale microservicio-estudiante=3
+```
+Notar que la el consumo de RAM, será aproximado los 6GB.
+
+Las direcciones disponibles para consulta, ejecutando desde la máquina local:
+
+| Servicio                   | Dirección                                       |
+|----------------------------|-------------------------------------------------|
+| Servidor de Configuración  | http://localhost:8888/prueba-servicio.properties |
+| Servidor de Eureka         | http://localhost:8761/                          |
+| Servidor Perimetral (ZUUL) | http://localhost:8080/estudiante/               |
+| Aplicación Cliente         | http://localhost:8181/                          |
+| Dashboard Hystrix          | http://localhost:4444/hystrix                   |
+| Kibana                     | http://localhost:5601/                                            |

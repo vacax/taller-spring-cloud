@@ -82,7 +82,7 @@ services:
       - eureka-server
 
   hystrix-server:
-    build: ./servidor-monitoreo/inicio
+    build: servidor-monitoreo/final
     restart: always
     environment:
       - CONFIG-SERVER=config-server
