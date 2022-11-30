@@ -44,9 +44,9 @@ services:
     build: ./servidor-configuracion/final
     restart: always
     environment:
-      - EUREKA-SERVER=eureka-server
+      - EUREKA_SERVER=eureka-server
       - spring_profiles_active=nube
-      - LOGSTASH-SERVER=localhost
+      - LOGSTASH_SERVER=localhost
     ports:
       - 8888:8888
     networks:
@@ -58,8 +58,8 @@ services:
     build: ./servidor-eureka/final
     restart: always
     environment:
-      - CONFIG-SERVER=config-server
-      - LOGSTASH-SERVER=logstash
+      - CONFIG_SERVER=config-server
+      - LOGSTASH_SERVER=logstash
     ports:
       - 8761:8761
     networks:
@@ -71,9 +71,9 @@ services:
     build: ./servidor-perimetral/final
     restart: always
     environment:
-      - CONFIG-SERVER=config-server
-      - EUREKA-SERVER=eureka-server
-      - LOGSTASH-SERVER=logstash
+      - CONFIG_SERVER=config-server
+      - EUREKA_SERVER=eureka-server
+      - LOGSTASH_SERVER=logstash
     ports:
       - 8080:8080
     networks:
@@ -85,9 +85,9 @@ services:
     build: servidor-monitoreo/final
     restart: always
     environment:
-      - CONFIG-SERVER=config-server
-      - EUREKA-SERVER=eureka-server
-      - LOGSTASH-SERVER=logstash
+      - CONFIG_SERVER=config-server
+      - EUREKA_SERVER=eureka-server
+      - LOGSTASH_SERVER=logstash
     ports:
       - 4444:4444
     networks:
@@ -107,10 +107,10 @@ services:
     build: ./microservicio-estudiante/final
     restart: always
     environment:
-      - CONFIG-SERVER=config-server
-      - HOST-BD=base-datos-estudiante
-      - EUREKA-SERVER=eureka-server
-      - LOGSTASH-SERVER=logstash
+      - CONFIG_SERVER=config-server
+      - HOST_BD=base-datos-estudiante
+      - EUREKA_SERVER=eureka-server
+      - LOGSTASH_SERVER=logstash
     networks:
       - mi-red
     depends_on:
@@ -120,9 +120,9 @@ services:
     build: ./cliente-crud-estudiante/final
     restart: always
     environment:
-      - CONFIG-SERVER=config-server
-      - EUREKA-SERVER=eureka-server
-      - LOGSTASH-SERVER=logstash
+      - CONFIG_SERVER=config-server
+      - EUREKA_SERVER=eureka-server
+      - LOGSTASH_SERVER=logstash
     ports:
       - 8181:8181
     networks:
