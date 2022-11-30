@@ -45,8 +45,9 @@
         </rollingPolicy>
     </appender>
 
+<!--    https://stackoverflow.com/questions/48521869/setting-logback-property-via-spring-config-environment-variable-in-spring-conf-->
     <appender name="elk" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>${LOGSTASH_SERVER:localhost}:5044</destination>
+        <destination>${LOGSTASH_SERVER:-localhost}:5044</destination>
         <!-- encoder is required -->
         <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
     </appender>
