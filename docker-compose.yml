@@ -46,7 +46,7 @@ services:
     environment:
       - EUREKA_SERVER=eureka-server
       - spring_profiles_active=nube
-      - LOGSTASH_SERVER=localhost
+      - LOGSTASH_SERVER=logstash
     ports:
       - 8888:8888
     networks:
