@@ -28,6 +28,10 @@ Estaremos configurando los siguientes servicios:
 * Monitoreo de las Aplicaciones.
 * Cliente - Prueba de los conceptos.
 
+## Versiones
+* Spring boot 2.2.2.
+* Spring Cloud Hoxton.
+
 ## Estructura del Taller
 
 Cada servicio que estaremos implementando está definido por una carpeta:
