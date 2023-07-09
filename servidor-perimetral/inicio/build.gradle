@@ -1,12 +1,12 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.1.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
+    id 'org.springframework.boot' version '3.1.1'
+    id 'io.spring.dependency-management' version '1.1.0'
 }
 
 group = 'edu.pucmm'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+sourceCompatibility = 17
 
 repositories {
     mavenCentral()
@@ -14,7 +14,7 @@ repositories {
 }
 
 ext {
-    set('springCloudVersion', "Hoxton.RC2")
+    set('springCloudVersion', "2022.0.3")
 }
 
 dependencies {
@@ -25,10 +25,9 @@ dependencies {
     //Librería de Eureka Cliente
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     //Librería de Zuul para servicio perimetral o gateway
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-    }
+    //implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 dependencyManagement {
@@ -37,6 +36,6 @@ dependencyManagement {
     }
 }
 
-test {
+tasks.named('test') {
     useJUnitPlatform()
 }
