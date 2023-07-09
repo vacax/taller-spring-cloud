@@ -28,6 +28,11 @@ Estaremos configurando los siguientes servicios:
 * Monitoreo de las Aplicaciones.
 * Cliente - Prueba de los conceptos.
 
+## Versiones de las Aplicaciones
+
+* Spring Boot 3.
+* Spring Cloud 2022.0.x aka Kilburn.
+
 ## Estructura del Taller
 
 Cada servicio que estaremos implementando está definido por una carpeta:
