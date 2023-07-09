@@ -1,8 +1,9 @@
 package edu.pucmm.microservicioestudiante;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixException;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -10,18 +11,14 @@ import org.slf4j.helpers.BasicMarkerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.servlet.http.HttpServletRequest;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
@@ -29,7 +26,6 @@ import org.h2.tools.Server;
 import java.sql.SQLException;
 
 @EnableDiscoveryClient
-@EnableCircuitBreaker
 @SpringBootApplication
 public class MicroservicioEstudianteApplication {
 
@@ -120,7 +116,7 @@ class AppController{
      * @return
      * @throws InterruptedException
      */
-    @HystrixCommand(fallbackMethod = "salidaCircuitoAbierto" )
+    //@HystrixCommand(fallbackMethod = "salidaCircuitoAbierto" )
     @RequestMapping("/simular-parada")
     public String simularParada()  {
         LOGGER.info("Prueba simulación de parada.");
