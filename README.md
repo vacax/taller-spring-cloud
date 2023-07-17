@@ -621,13 +621,13 @@ el flujo que estará utilizando será: http://localhost:4444/turbine.stream?clus
 
 ![Dashboard-Hystrix](./imagenes/hystrix-dashboard.png)
 
-### Arranque del proyecto vía Docker Compose
+### Arranque del proyecto vía Docker Compose Completo
 
 El proyecto está configurado para iniciarlizar todo los diferentes sistemas de forma automática
 desde el script de *docker-compose*, para inicializarlo pueden ejecutar el siguiente comando:
 
 ```
-docker-compose up --scale microservicio-estudiante=3
+docker compose  up --scale microservicio-estudiante=3
 ```
 Notar que la el consumo de RAM, será aproximado los 6GB.
 
@@ -641,3 +641,21 @@ Las direcciones disponibles para consulta, ejecutando desde la máquina local:
 | Aplicación Cliente            | http://localhost:8181/                           |
 | Dashboard Hystrix             | http://localhost:4444/hystrix                    |
 | Kibana                        | http://localhost:5601/                           |
+
+### Arranque del proyecto vía Docker Compose Ligero 
+
+Está versión del Docker Compose sube sin el ELK trabajando únicamente con los aspectos básico:
+
+```
+docker compose -f docker-compose-sin-elk.yml up --scale microservicio-estudiante=3
+```
+
+Las direcciones disponibles para consulta, ejecutando desde la máquina local:
+
+| Servicio                      | Dirección                                        |
+|-------------------------------|--------------------------------------------------|
+| Servidor de Configuración     | http://localhost:8888/prueba-servicio.properties |
+| Servidor de Eureka            | http://localhost:8761/                           |
+| Servidor Perimetral (Gateway) | http://localhost:8081/estudiante/                |
+| Aplicación Cliente            | http://localhost:8181/                           |
+| Consola H2                    | http://localhost:8082/                           |
