@@ -27,7 +27,6 @@ dependencies {
     //Librería para agregar la notificación con Eureka.
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     //Libreria para la caja de breaker
-    //implementation 'org.springframework.cloud:spring-cloud-starter-netflix-hystrix'
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 
     //base de datos H2

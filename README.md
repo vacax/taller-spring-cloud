@@ -633,11 +633,11 @@ Notar que la el consumo de RAM, será aproximado los 6GB.
 
 Las direcciones disponibles para consulta, ejecutando desde la máquina local:
 
-| Servicio                   | Dirección                                       |
-|----------------------------|-------------------------------------------------|
-| Servidor de Configuración  | http://localhost:8888/prueba-servicio.properties |
-| Servidor de Eureka         | http://localhost:8761/                          |
-| Servidor Perimetral (ZUUL) | http://localhost:8080/estudiante/               |
-| Aplicación Cliente         | http://localhost:8181/                          |
-| Dashboard Hystrix          | http://localhost:4444/hystrix                   |
-| Kibana                     | http://localhost:5601/                                            |
+| Servicio                      | Dirección                                        |
+|-------------------------------|--------------------------------------------------|
+| Servidor de Configuración     | http://localhost:8888/prueba-servicio.properties |
+| Servidor de Eureka            | http://localhost:8761/                           |
+| Servidor Perimetral (Gateway) | http://localhost:8081/estudiante/                |
+| Aplicación Cliente            | http://localhost:8181/                           |
+| Dashboard Hystrix             | http://localhost:4444/hystrix                    |
+| Kibana                        | http://localhost:5601/                           |

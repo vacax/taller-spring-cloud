@@ -7,33 +7,22 @@
 
     <!-- Bootstrap CSS -->
     <!-- Required Stylesheets -->
-    <link
-            type="text/css"
-            rel="stylesheet"
-            href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"
-    />
-    <link
-            type="text/css"
-            rel="stylesheet"
-            href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 
     <!-- Required scripts -->
-    <script src="https://unpkg.com/vue"></script>
-    <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    <title>Ejemplo CRUD - Spring Cloud - VueJS</title>
+    <title>Ejemplo CRUD con VueJS</title>
 </head>
 <body>
 
 <div class="container" id="app">
     <div class="row mt-3">
         <div class="col-sm">
-            <h1 class="text-center">Ejemplo CRUD Estudiante - Spring Cloud</h1>
+            <h1 class="text-center">Ejemplo CRUD - Aplicación Single Page - Vuejs</h1>
             <div>
-                <b-button variant="outline-primary" v-b-modal.modal-1 @click="nuevoEstudiante">Crear Estudiante</b-button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-1" @click="nuevoEstudiante">Crear Estudiante</button>
             </div>
         </div>
     </div>
@@ -54,8 +43,8 @@
                     <td>{{estudiante.nombre}}</td>
                     <td>{{estudiante.carrera}}</td>
                     <td>
-                        <button class="btn btn-secondary" @click="editarEstudiante(estudiante)">Editar</button> |
-                        <button class="btn btn-danger" @click="eliminarEstudiante(estudiante)">Eliminar</button>
+                        <button type="button" class="btn btn-secondary" @click="editarEstudiante(estudiante)">Editar</button> |
+                        <button type="button" class="btn btn-danger" @click="eliminarEstudiante(estudiante)">Eliminar</button>
                     </td>
                 </tr>
                 </tbody>
@@ -63,141 +52,172 @@
         </div>
     </div>
 
-    <b-modal id="modal-1" hide-footer :title="titulo">
-        <b-form @submit.prevent="crearActualizarEstudiante" @reset="limpiar" >
+    <div id="modal-1" class="modal fade modal-dialog modal-dialog-centered" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>{{titulo}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-target="#modal-1" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form @submit.prevent="crearActualizarEstudiante" @reset="limpiar" >
 
-            <!-- Matricula       -->
-            <b-form-group
-                    label="Matrícula"
-                    label-for="g1">
-                <b-form-input
-                        id = "g1"
-                        v-model="nuevo.matricula"
-                        type="number"
-                        required
-                        placeholder="Matrícula"
-                ></b-form-input>
-            </b-form-group>
+                        <!-- Matricula       -->
+                        <div class="mb-3">
+                            <label for="g1" class="form-label">Matrícula</label>
+                            <input class="form-control"
+                                   id = "g1"
+                                   v-model="nuevo.matricula"
+                                   type="number"
+                                   required
+                                   placeholder="Matrícula"
+                            ></input>
+                        </div>
 
-            <!-- Nombre            -->
-            <b-form-group
-                    label="Nombre:"
-                    label-for="g3">
-                <b-form-input
-                        id = "g3"
-                        v-model="nuevo.nombre"
-                        type="text"
-                        required
-                        placeholder="Nombre"
-                ></b-form-input>
-            </b-form-group>
+                        <!-- Nombre            -->
+                        <div class="mb-3">
+                            <label for="g2" class="form-label">Nombre</label>
+                            <input class="form-control"
+                                   id = "g2"
+                                   v-model="nuevo.nombre"
+                                   type="text"
+                                   required
+                                   placeholder="Nombre"
+                            ></input>
+                        </div>
 
-            <!-- Carrera            -->
-            <b-form-group
-                    label="Carrera:"
-                    label-for="g3">
-                <b-form-input
-                        id = "g3"
-                        v-model="nuevo.carrera"
-                        type="text"
-                        required
-                        placeholder="Carrera"
-                ></b-form-input>
-            </b-form-group>
-            <b-button type="submit" variant="primary">Enviar</b-button>
-            <b-button type="reset" variant="danger">Limpiar</b-button>
-        </b-form>
-    </b-modal>
+                        <!-- Carrera            -->
+                        <div class="mb-3">
+                            <label for="g3" class="form-label">Carrera</label>
+                            <input class="form-control"
+                                   id = "g3"
+                                   v-model="nuevo.carrera"
+                                   type="text"
+                                   required
+                                   placeholder="Carrera"
+                            ></input>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                        <button type="reset" class="btn btn-danger">Limpiar</button>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
+
+<!-- BootStrap-->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
 
 <!-- Libreria Vuejs -->
 <script>
 
-    <!-- Como se ejecuta desde el host, estará utilizando el servidor perimetral zulu    -->
-    var URL_API = "http://localhost:8080/estudiante/estudiante";
+    /**
+     * En caso de utilizar con API diferentes al dominio indicar la URL.
+     */
+    const NOMBRE_KEY = "API_URL";
+    if(localStorage.getItem(NOMBRE_KEY) == null){
+        localStorage.setItem(NOMBRE_KEY, "/api/estudiante/")
+    }
+    const URL_API = localStorage.getItem(NOMBRE_KEY);
 
-    var app = new Vue({
+    const { createApp } = Vue;
 
-        el: '#app',
+    const app = createApp({
 
-        data: {
-            titulo: "Creación de Estudiante",
-            editando: false,
-            nuevo: {
-                matricula: '',
-                nombre: '',
-                carrera: ''
-            },
-            estudiantes: []
-        } ,
+        data(){
+            return {
 
-        created: function () {//representa la función de inicialización Vuejs
+                titulo: "Creación de Estudiante",
+                editando: false,
+                nuevo: {
+                    matricula: '',
+                    nombre: '',
+                    carrera: ''
+                },
+                estudiantes: [],
+                modal: ""
 
-            console.log("Inicializando le proyecto en Vuejs: ", this.titulo);
+            }
         },
 
-        mounted: function () {
-
+        mounted() {
+            console.log("Iniciando la aplicación en mounted: "+this.titulo);
             this.$nextTick(function () {  //garantizo que todos los elementos están renderizados.
                 console.log("Cargando todo el render del proyecto");
                 this.listaEstudiantes();
+                this.modal = new bootstrap.Modal(document.getElementById('modal-1'));
             });
         },
 
+
         methods: {
 
-            listaEstudiantes: function(){
+            listaEstudiantes(){
                 console.log("Cargando lista de Estudiante");
-                axios.get(URL_API+'/').then(response => {
+                axios.get(URL_API).then(response => {
                     //
                     console.log("Recuperando información del servidor");
-                //
-                this.estudiantes = response.data;
-            }).catch(error => { console.log(error); });
+                    //
+                    this.estudiantes = response.data;
+                }).catch(error => { console.log(error); });
             },
 
-            nuevoEstudiante: function(){
+            nuevoEstudiante(){
                 console.log("Nuevo Estudiante");
                 this.titulo = "Nuevo Estudiante";
                 this.editando = false;
                 this.limpiar();
             },
 
-            crearActualizarEstudiante: function(){
+            crearActualizarEstudiante(){
                 console.log("datos para almacenar: ", this.nuevo);
+
+
                 if(!this.editando){
                     //creando
-                    axios.post(URL_API+'/', this.nuevo).then(response => {
+                    axios.post(URL_API, this.nuevo).then(response => {
                         this.limpiar();
-                    this.listaEstudiantes();
-                }).catch(error => console.log(error));
+                        this.listaEstudiantes();
+                    }).catch(error => console.log(error));
                 } else{
                     //editando
-                    axios.put(URL_API+'/', this.nuevo).then(response => {
+                    axios.put(URL_API, this.nuevo).then(response => {
                         this.limpiar();
-                    this.listaEstudiantes();
-                }).catch(error => console.log(error));
-                }
+                        this.listaEstudiantes();
 
-                this.$bvModal.hide('modal-1');
+                    }).catch(error => console.log(error));
+                }
+                this.modal.hide();
             },
 
-            editarEstudiante: function (estudiante) {
+            editarEstudiante(estudiante) {
                 console.log("El estudiante seleccionado para actualizar: ", estudiante);
                 this.titulo = "Editando Estudiante - "+estudiante.matricula;
                 this.nuevo = Object.assign({}, estudiante); //copiando el objeto, evitando el cambio directo en el form.
                 this.editando = true;
-                this.$bvModal.show('modal-1');
+
+                this.modal.show();
             },
 
-            eliminarEstudiante: function (estudiante) {
-                console.log("Eliminando la matricula: ", estudiante);
-                axios.delete(URL_API+'/', estudiante).then(response => {
-                    this.listaEstudiantes();
-            }).catch(error => console.log(error));
+            eliminarEstudiante(estudiante) {
+
+                const confirmed = confirm("¿Desea elminiar el estudiante: "+estudiante.matricula+"?");
+                if(confirmed) {
+                    console.log("Eliminando la matricula: ", estudiante);
+                    axios.delete(URL_API + "" + estudiante.matricula, estudiante).then(response => {
+                        this.listaEstudiantes();
+                    }).catch(error => console.log(error));
+                }
             },
 
-            limpiar: function () {
+            limpiar() {
                 this.nuevo.matricula='';
                 this.nuevo.nombre='';
                 this.nuevo.carrera='';
@@ -205,6 +225,13 @@
 
         }
     });
+
+    /**
+     *
+     */
+    app.mount('#app');
+
+
 </script>
 </body>
 </html>

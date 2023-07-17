@@ -1,0 +1,91 @@
+version: '3.9'
+
+networks:
+  mi-red:
+
+services:
+
+  config-server:
+    build: ./servidor-configuracion/final
+    restart: always
+    environment:
+      - EUREKA_SERVER=eureka-server
+      - spring_profiles_active=nube
+      - LOGSTASH_SERVER=logstash
+    ports:
+      - 8888:8888
+    networks:
+      - mi-red
+
+  eureka-server:
+    build: ./servidor-eureka/final
+    restart: always
+    environment:
+      - CONFIG_SERVER=config-server
+      - LOGSTASH_SERVER=logstash
+    ports:
+      - 8761:8761
+    networks:
+      - mi-red
+    depends_on:
+      - config-server
+
+  zulu-server:
+    build: ./servidor-perimetral/final
+    restart: always
+    environment:
+      - CONFIG_SERVER=config-server
+      - EUREKA_SERVER=eureka-server
+      - LOGSTASH_SERVER=logstash
+    ports:
+      - 8081:8081
+    networks:
+      mi-red:
+    depends_on:
+      - eureka-server
+
+  base-datos-estudiante:
+    image: oscarfonts/h2
+    restart: always
+    environment:
+      - H2_OPTIONS=-ifNotExists
+    ports:
+      - 8082:81
+    networks:
+      - mi-red
+
+  microservicio-estudiante:
+    build: ./microservicio-estudiante/final
+    restart: always
+    environment:
+      - CONFIG_SERVER=config-server
+      - HOST_BD=base-datos-estudiante
+      - EUREKA_SERVER=eureka-server
+      - LOGSTASH_SERVER=logstash
+      - PUERTO_DB=1521
+    networks:
+      - mi-red
+    depends_on:
+      - base-datos-estudiante
+
+  client-web:
+    build: ./cliente-crud-estudiante/final
+    restart: always
+    environment:
+      - CONFIG_SERVER=config-server
+      - EUREKA_SERVER=eureka-server
+      - LOGSTASH_SERVER=logstash
+    ports:
+      - 8181:8181
+    networks:
+      - mi-red
+    depends_on:
+      - zulu-server
+      - microservicio-estudiante
+
+
+
+
+
+
+

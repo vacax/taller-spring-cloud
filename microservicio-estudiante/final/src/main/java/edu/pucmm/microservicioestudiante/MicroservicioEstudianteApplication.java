@@ -1,6 +1,8 @@
 package edu.pucmm.microservicioestudiante;
 
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.servlet.http.HttpServletRequest;
@@ -112,11 +114,18 @@ class AppController{
     }
 
     /**
-     * Simulando una parada del metodo por tiempo...
+     * Simulando una parada del metodo por tiempo, cuando se detecta el error o se sobrepasa la configuracion
+     * Pasamos del estado Abierto, Semi-abierto, Cerrado. El Cerrado es la operación normal y la transacción se considera
+     * semi-abierto.
+     *
+     * La configuración está disponible en el archivo de properties. El nombre prueba es como lo tenemos configurado en
+     * dicho archivo y pasando la configuración base que le llamamos mi-circuito.
+     *
      * @return
      * @throws InterruptedException
      */
-    //@HystrixCommand(fallbackMethod = "salidaCircuitoAbierto" )
+    @CircuitBreaker(name = "prueba", fallbackMethod = "salidaCircuitoAbierto")
+    //@TimeLimiter(name = "prueba")
     @RequestMapping("/simular-parada")
     public String simularParada()  {
         LOGGER.info("Prueba simulación de parada.");
@@ -129,8 +138,8 @@ class AppController{
         return "Mostrando información";
     }
 
-    public String salidaCircuitoAbierto(){
-        LOGGER.info("Circuito Abierto...");
+    public String salidaCircuitoAbierto(Throwable e){
+        LOGGER.info("Circuito Abierto, ver excepcion: "+e.getMessage());
         return "Con la ejecución del metodo.... Abriendo el circuito...";
     }
 
