@@ -63,6 +63,7 @@ services:
       - EUREKA_SERVER=eureka-server
       - LOGSTASH_SERVER=logstash
       - PUERTO_DB=1521
+      - NOMBRE_DB=~./micro
     networks:
       - mi-red
     depends_on:
