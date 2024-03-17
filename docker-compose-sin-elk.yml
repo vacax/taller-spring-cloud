@@ -5,6 +5,14 @@ networks:
 
 services:
 
+  zipkin-server:
+    image: openzipkin/zipkin
+    restart: always
+    ports:
+      - 9411:9411
+    networks:
+      - mi-red
+
   config-server:
     build: ./servidor-configuracion/final
     restart: always
@@ -37,6 +45,7 @@ services:
       - CONFIG_SERVER=config-server
       - EUREKA_SERVER=eureka-server
       - LOGSTASH_SERVER=logstash
+      - ZIPKIN_SERVER=zipkin-server
     ports:
       - 8081:8081
     networks:
@@ -64,6 +73,7 @@ services:
       - LOGSTASH_SERVER=logstash
       - PUERTO_DB=1521
       - NOMBRE_DB=~./micro
+      - ZIPKIN_SERVER=zipkin-server
     networks:
       - mi-red
     depends_on:
@@ -83,10 +93,5 @@ services:
     depends_on:
       - zulu-server
       - microservicio-estudiante
-
-
-
-
-
 
 

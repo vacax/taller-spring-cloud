@@ -5,6 +5,14 @@ networks:
 
 services:
 
+  zipkin-server:
+    image: openzipkin/zipkin
+    restart: always
+    ports:
+      - 9411:9411
+    networks:
+      - mi-red
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.8.1
     restart: always
@@ -74,6 +82,7 @@ services:
       - CONFIG_SERVER=config-server
       - EUREKA_SERVER=eureka-server
       - LOGSTASH_SERVER=logstash
+      - ZIPKIN_SERVER=zipkin-server
     ports:
       - 8080:8080
     networks:
@@ -81,25 +90,13 @@ services:
     depends_on:
       - eureka-server
 
-  hystrix-server:
-    build: servidor-monitoreo/final
+  base-datos-estudiante:
+    image: oscarfonts/h2
     restart: always
     environment:
-      - CONFIG_SERVER=config-server
-      - EUREKA_SERVER=eureka-server
-      - LOGSTASH_SERVER=logstash
+      - H2_OPTIONS=-ifNotExists
     ports:
-      - 4444:4444
-    networks:
-      - mi-red
-    depends_on:
-      - microservicio-estudiante
-
-  base-datos-estudiante:
-    image: buildo/h2database:2020-12-11
-    restart: always
-    ports:
-      - 8082:8082
+      - 8082:81
     networks:
       - mi-red
 
@@ -111,6 +108,9 @@ services:
       - HOST_BD=base-datos-estudiante
       - EUREKA_SERVER=eureka-server
       - LOGSTASH_SERVER=logstash
+      - PUERTO_DB=1521
+      - NOMBRE_DB=~./micro
+      - ZIPKIN_SERVER=zipkin-server
     networks:
       - mi-red
     depends_on:
