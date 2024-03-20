@@ -17,6 +17,12 @@ public class PruebaServicioCentralizacionConfigApplication {
 
 }
 
+/**
+ * Con el uso de @RefreshScope y en combinación con Actuator puedo resfrescar la información.
+ * curl -X POST http://localhost:xxxx/actuator/refresh
+ * Ver un buen post con la pros y contra:
+ * https://medium.com/@AlexanderObregon/dynamic-configuration-with-spring-cloud-config-a-comprehensive-guide-7cd825dd9867
+ */
 @RefreshScope
 @RestController
 class PruebaRestController{
