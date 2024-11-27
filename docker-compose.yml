@@ -84,7 +84,7 @@ services:
       - LOGSTASH_SERVER=logstash
       - ZIPKIN_SERVER=zipkin-server
     ports:
-      - 8080:8080
+      - 8081:8081
     networks:
       mi-red:
     depends_on:
