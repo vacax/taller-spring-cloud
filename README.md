@@ -30,8 +30,8 @@ Estaremos configurando los siguientes servicios:
 
 ## Versiones de las Aplicaciones
 
-* Spring Boot 3.
-* Spring Cloud 2022.0.x aka Kilburn.
+* Spring Boot 4.
+* Spring Cloud 2025.1.x aka Oakwood.
 
 ## Estructura del Taller
 

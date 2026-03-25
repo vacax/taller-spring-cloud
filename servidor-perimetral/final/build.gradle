@@ -1,14 +1,16 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.2.3'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version '4.0.4'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'edu.pucmm'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '21'
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
 }
 
 repositories {
@@ -17,29 +19,40 @@ repositories {
 }
 
 ext {
-    set('springCloudVersion', "2023.0.0")
+    set('springCloudVersion', "2025.1.0")
 }
 
 dependencies {
-    //
+    // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    //Librería para la centralizacion de la configuracion.
+    
+    // Librería para la centralizacion de la configuración
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
-    //Librería de Eureka Cliente
+    
+    // Librería de Eureka Cliente para service discovery
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-    //Librería de Zuul para servicio perimetral o gateway
-    //implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
-    implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
-    //librería log ELK
+    
+    // Spring Cloud Gateway Server MVC - Compatible con Spring Boot 4.x y Spring Cloud 2025.1.x (Oakwood)
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway-server-webmvc'
+    
+    // Lombok para anotaciones como @Slf4j
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    
+    // Librería log ELK
     implementation 'net.logstash.logback:logstash-logback-encoder:6.4'
+    
+    // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    //Observavilidad, con Micrometer con Opentracing
+    // Observabilidad, con Micrometer y Opentracing
     implementation "io.micrometer:micrometer-observation"
     implementation "io.micrometer:micrometer-tracing-bridge-brave"
-    implementation "io.micronaut.micrometer:micronaut-micrometer-registry-prometheus:5.3.0"
+    implementation "io.micrometer:micrometer-registry-prometheus"
 
-    // Para integración con Zipkin.
+    // Para integración con Zipkin
     implementation "io.zipkin.reporter2:zipkin-reporter-brave"
 }
 

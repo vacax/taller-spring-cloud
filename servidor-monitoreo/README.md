@@ -4,7 +4,7 @@ Desde la versión 3 de Spring Boot, se utiliza Micrometer
 para el seguimiento. Es necesario levantar el servico vía en Docker:
 
 ```
-docker run -d -p 9411:9411 openzipkin/zipkin
+docker run --name zipkin --rm -d -p 9411:9411 openzipkin/zipkin
 ```
 
 Ver documentación oficial en https://zipkin.io/pages/quickstart
